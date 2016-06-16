@@ -1,9 +1,5 @@
 <?php
 
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
-ini_set("log_errors", 0);
-
 class DatabaseFactory {
     private static $factory;
     private $database;
@@ -19,7 +15,7 @@ class DatabaseFactory {
                     PDO::ATTR_ERRMODE => PDO::ERRMODE_WARNING,
                     PDO::ATTR_STRINGIFY_FETCHES => false,
                 );
-                $this->database = new PDO('mysql:host=127.0.0.1;dbname=coursebuilder;port=23306;charset=utf8', 'coursebuilder', 'T3#fh*&^vf^g3FC', $options);
+                $this->database = new PDO('mysql:host=127.0.0.1;dbname=--removed-dbname--;port=--removed-dbport--;charset=utf8', '--removed-username--', '--removed-password--', $options);
             } catch (PDOException $e) {
                 echo 'Database connection can not be estabilished.' . $e->getCode();
                 exit;
@@ -86,5 +82,5 @@ if ($count == 0) {
 setcookie("Username", $verifier->get_username(), time() + 1800);
 echo "<!DOCTYPE html><html><head><meta http-equiv='refresh' content='0;URL=/engine/pages/index/'></head></html>";
 
-// can't do this because of an IIS bug 
+// can't do this because of an IIS bug - php doesn't set a cookie before setting headers
 // header('Location: /engine/pages/index/');
