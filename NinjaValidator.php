@@ -9,9 +9,9 @@ class ValidationException extends \Exception {}
 class Validator {
 
     const USERNAME = 'tokenuser';
-    const PASSWORD = 'GEv6mJ7wJgWR';
+    const PASSWORD = '--removed-password--';
     const AUTHAPI = 'http://my.coursesuite.ninja/api/';
-    const APP_KEY = "docninja";
+    const APP_KEY = 'coursebuildr'; // this app name in coursesutie db
 
     protected $url;
     protected $checked;
