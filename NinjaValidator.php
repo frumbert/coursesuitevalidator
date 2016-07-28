@@ -86,6 +86,11 @@ class Validator {
         return $this->response->valid;
     }
 
+    function is_trial() {
+        if (!$this->checked) self::check();
+        return $this->response->trial;
+    }
+
     function api_org() {
         if (!$this->checked) self::check();
         return $this->response->org;

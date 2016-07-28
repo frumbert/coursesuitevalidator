@@ -12,6 +12,7 @@ At its simplest, this class looks at the value of "token" or "apikey" and valida
 
     $validator->is_api() - boolean
     $validator->is_valid() - boolean, did the token or apikey validate? Must have an active subscription or valid api key
+    $validator->is_trial() - boolean, whether the user has a free trial or not
     $validator->api_org() - string, the orgname used to generate the apikey
     $validator->get_tier() - int, the level the user has subscribed to
     $validator->get_response() - object, entire response
