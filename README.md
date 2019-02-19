@@ -13,9 +13,9 @@ then ensure the web server (or host script) sets these environment variables
 
 then the code
 
-'''php
     require '../vendor/autoload.php';
     $verifier = \CourseSuite\Validator::Instance(false)->Validate($_GET);
+
     if (!$verifier->valid) {
         header("location: " . $verifier->home . "bad-token");
         die();
@@ -35,7 +35,7 @@ then the code
      	die("authentication failed or was not understood.");
     }
     // ... rest of the app
-'''
+
 
 # Returned as php object (default values)
 
