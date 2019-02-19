@@ -1,22 +1,69 @@
-# validates token or apikey against coursesuite.ninja
+# validates token or apikey against an endpoint
 
-At its simplest, this class looks at the value of "token" or "apikey" and validates it against coursesuite.ninja server.
+At its simplest, this class looks at the value of "token" or "apikey" and validates it against the configured server, which is set via environment variables in the web server.
 
-    require_once 'NinjaValidator.php';
-    $verifier = (new \Ninjitsu\Validator($_GET))->check();
+    composer require coursesuite/validator
+
+then ensure the web server (or host script) sets these environment variables
+
+    HOME_URL            http://www.coursesuite.ninja/home/{app-key}
+    AUTHAPI_URL         http://www.coursesuite.ninja/api/validate
+    AUTHAPI_USER        (digest-username)
+    AUTHAPI_PASSWORD    (digest-password)
+
+then the code
+
+'''php
+    require '../vendor/autoload.php';
+    $verifier = \CourseSuite\Validator::Instance(false)->Validate($_GET);
+    if (!$verifier->valid) {
+        header("location: " . $verifier->home . "bad-token");
+        die();
+    }
+
+    if ($verifier->licence->remaining < 1) {
+        header("location: " . $verifier->home . "in-use");
+        die();
+    }
+
+    if ($verifier->licence->tier < 1) {
+        header("location: " . $verifier->home . "bad-tier");
+        die();
+    }    
+
     if (!$verifier->is_valid()) {
      	die("authentication failed or was not understood.");
     }
+    // ... rest of the app
+'''
 
-# Variables
+# Returned as php object (default values)
 
-    $validator->is_api() - boolean
-    $validator->is_valid() - boolean, did the token or apikey validate? Must have an active subscription or valid api key
-    $validator->is_trial() - boolean, whether the user has a free trial or not
-    $validator->api_org() - string, the orgname used to generate the apikey
-    $validator->get_tier() - int, the level the user has subscribed to
-    $validator->get_response() - object, entire response
-    $validator->get_username() - username of the person in coursesuite
-    $validator->get_useremail() - email of the person in coursesuite
-
+    {
+        valid: false,
+        licence: {
+            tier: 0,
+            seats: 1,
+            remaining: 1
+        },
+        code: {
+            minified: true,
+            debug: false
+        },
+        api: {
+            bearer: null,
+            publish: "",
+            header: {
+                html: "",
+                css: ""
+            },
+            template: ""
+        },
+        user: {
+            container: "",
+            email: ""
+        },
+        addons: [],
+        home: ""
+    }
 
