@@ -1,5 +1,5 @@
 {
-    "name": "coursesuite/validator",
+    "name": "CoursesuiteValidator",
     "description": "CourseSuite API Validator",
     "type": "library",
     "version":"dev-master",
@@ -7,8 +7,6 @@
         "php": ">=5.4"
     },
     "autoload": {
-        "psr-4": {
-            "CourseSuite\\": "src"
-        }
-    }
+        "psr-0": {"CoursesuiteValidator": ""}
+    },
 }

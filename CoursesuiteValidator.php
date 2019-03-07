@@ -1,10 +1,6 @@
 <?php
 
-namespace CourseSuite;
-
-const VERIFY_TLS = 2; // php70 accept false (debug) or 2 (production), but not 1
-
-class ValidationException extends \Exception
+class CoursesuiteValidatorException extends \Exception
 {
     public function __construct($message, $code, $stack = null)
     {
@@ -18,20 +14,15 @@ class ValidationException extends \Exception
     }
 }
 
-class Validator
+class CoursesuiteValidator
 {
 
-    private static $factory;
     private $debug;
-    public static function Instance($debug = false) {
-        if (!self::$factory) {
-            self::$factory = new Validator($debug);
-        }
-        return self::$factory;
-    }
+    private $verify_tls = true;
 
-    function __construct($debug = false) {
+    function __construct($debug = false, $verify = true) {
         $this->debug = $debug;
+        $this->verify_tls = $verify;
     }
 
     public function Validate($get) {
@@ -71,8 +62,8 @@ class Validator
                 curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-NinjaValidator: true"));
                 curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_DIGEST);
                 curl_setopt($ch, CURLOPT_USERPWD, getenv("AUTHAPI_USER") . ":" . getenv("AUTHAPI_PASSWORD"));
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, VERIFY_TLS);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, VERIFY_TLS);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, $this->verify_tls);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->verify_tls);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -80,15 +71,15 @@ class Validator
                 if ($this->debug) echo $resp, PHP_EOL;
 
                 if (curl_errno($ch)) {
-                    throw new ValidationException(curl_error($ch), 500);
+                    throw new CoursesuiteValidatorException(curl_error($ch), 500);
                 }
                 // validate HTTP status code (user/password credential issues)
                 $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 if ($status_code != 200) {
-                    throw new ValidationException("Response with Status Code [" . $status_code . "].", $status_code);
+                    throw new CoursesuiteValidatorException("Response with Status Code [" . $status_code . "].", $status_code);
                 }
             } catch (Exception $ex) {
-                throw new ValidationException('Unable to properly download file from url=['+$url+'] to path ['+$destination+'].', 500, $ex);
+                throw new CoursesuiteValidatorException('Unable to properly download file from url=['+$url+'] to path ['+$destination+'].', 500, $ex);
             } finally {
                 if ($ch != null) {
                     curl_close($ch);
