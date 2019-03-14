@@ -20,7 +20,7 @@ class CoursesuiteValidator
     private $debug;
     private $verify_tls = true;
 
-    function __construct($debug = false, $verify = true) {
+    function __construct($debug = false, $verify = 2) {
         $this->debug = $debug;
         $this->verify_tls = $verify;
     }
