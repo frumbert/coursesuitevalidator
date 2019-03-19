@@ -1,5 +1,5 @@
 {
-    "name": "CoursesuiteValidator",
+    "name": "frumbert/coursesuitevalidator",
     "description": "CourseSuite API Validator",
     "type": "library",
     "version":"dev-master",
