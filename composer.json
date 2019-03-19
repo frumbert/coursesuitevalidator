@@ -2,7 +2,9 @@
     "name": "frumbert/coursesuitevalidator",
     "description": "CourseSuite API Validator",
     "type": "library",
-    "version":"dev-master",
+    "keywords": [
+        "coursesuite"
+    ],
     "require": {
         "php": ">=5.4"
     },
