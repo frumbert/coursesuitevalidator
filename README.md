@@ -2,7 +2,7 @@
 
 At its simplest, this class looks at the value of "token" or "apikey" and validates it against the configured server, which is set via environment variables in the web server.
 
-    composer require coursesuite/validator
+    composer require frumbert/coursesuitevalidator
 
 then ensure the web server (or host script) sets these environment variables
 
