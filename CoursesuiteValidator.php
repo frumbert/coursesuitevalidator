@@ -53,7 +53,16 @@ class CoursesuiteValidator
         $result->app = new \stdClass();
         $result->app->addons = array();
 
-        if (isset($get["hash"])) {
+        $server = parse_url(getenv("AUTHAPI_URL"))["host"] . "."; // end domain name in a dot to prevent extra resolutions
+
+        if ($server === gethostbyname($server)) { // hostname doesn't resolve to an IP address (returns name not ip); server must be down, skip licencing
+
+            $result->valid = true;
+            $result->licence->tier = 99;
+            $result->app->socket = "ws://127.0.0.1";
+            $result->app->layer = "";
+
+        } else if (isset($get["hash"])) {
             try {
                 $ch = curl_init();
                 if ($this->debug) echo "GET ", str_replace('{hash}', $get["hash"], getenv("AUTHAPI_URL")), PHP_EOL, PHP_EOL;
