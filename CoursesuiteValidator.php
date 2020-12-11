@@ -19,10 +19,12 @@ class CoursesuiteValidator
 
     private $debug;
     private $verify_tls = true;
+    private $bypass = false;
 
-    function __construct($debug = false, $verify = 2) {
+    function __construct($debug = false, $verify = 2, $bypass = false) {
         $this->debug = $debug;
         $this->verify_tls = $verify;
+        $this->bypass = $bypass;
     }
 
     public function Validate($get) {
@@ -55,7 +57,7 @@ class CoursesuiteValidator
 
         $server = parse_url(getenv("AUTHAPI_URL"))["host"] . "."; // end domain name in a dot to prevent extra resolutions
 
-        if ($server === gethostbyname($server)) { // hostname doesn't resolve to an IP address (returns name not ip); server must be down, skip licencing
+        if ($this->bypass || $server === gethostbyname($server)) { // hostname doesn't resolve to an IP address (returns name not ip); server must be down, skip licencing
 
             $result->valid = true;
             $result->licence->tier = 99;
